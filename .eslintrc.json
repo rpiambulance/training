@@ -13,7 +13,16 @@
   "parserOptions": {
     "ecmaVersion": 2018
   },
+  "plugins": ["unicorn"],
   "rules": {
+    "unicorn/filename-case": [
+      "warn",
+      {
+        "cases": {
+          "camelCase": true
+        }
+      }
+    ],
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
