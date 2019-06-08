@@ -1,26 +1,35 @@
+//node packages
 const express = require('express');
-require('dotenv').config();
-//needed for cors, will remove in production
+require('dotenv').config(); //needed for cors, will remove in production
 const cors = require('cors');
 const bodyParser = require("body-parser");
-const app = express();
-const port = 3000;
+
+//local packages
 const { pool } = require('./database.js');
 const { verifyToken, createUser, getUserInfo, findUser, getAllUsers, getUserFullName} = require('./UserFunctions.js');
 const { getChecklistTemplates, updateChecklists, getUserChecklist, getAllUserChecklists } = require ('./ChecklistFunctions.js');
 const { roleNameToAbbr } = require ('./HelperFunctions.js');
 const { signItem } = require('./TrainerFunctions');
 
+//node package config
+const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-// Because angular is hosted on a separate server, angular will be hosted together on production run
 var corsOptions = {
+  // Because angular is hosted on a separate server, angular will be hosted together on production run
     origin: 'http://localhost:4200',
     optionsSuccessStatus: 200
 }
-
 app.use(cors(corsOptions));
+
+//local package config
+
+//globals
+const PORT = 3000;
+
+
+
+
 
 app.post('/user/verify', async (req, res) => {
     if(req.body['token'] != null) {
@@ -64,7 +73,7 @@ app.get('/user/fullname', async (req, res) => {
         if (name) {
             res.send({success: true, name: name, message: "Name successfully retrieved!"});
         }else {
-            res.send({success: false, name: null, message: "Error occured retrieving the name of that user!"}); 
+            res.send({success: false, name: null, message: "Error occured retrieving the name of that user!"});
         }
     }else {
         res.send({success: false, name: null, message: "No Id specified!"});
@@ -122,12 +131,12 @@ app.post('/checklist/user', async (req, res) => {
             const userId = (await findUser(user.sub))[0].id;
             const checklist = await getUserChecklist(userId, req.body['credential']);
             if (checklist){
-                res.send({success: true, checklist: checklist, message: "Succesfully retrieved checklist!"}); 
+                res.send({success: true, checklist: checklist, message: "Succesfully retrieved checklist!"});
             }else{
-                res.send({success: false, checklist: null, message: "Hmm. There does not appear to be a checklist for that credential, if you believe this an error please contact a dev!"}); 
+                res.send({success: false, checklist: null, message: "Hmm. There does not appear to be a checklist for that credential, if you believe this an error please contact a dev!"});
             }
         }else{
-            res.send({success: false, checklist: null, message: "We could not verify your user token!"}); 
+            res.send({success: false, checklist: null, message: "We could not verify your user token!"});
         }
     }else{
         res.send({success: false, checklist: null, message: "You did not send over your user token and / or credential abbreviation!"});
@@ -143,12 +152,12 @@ app.post('/checklist/user-all', async (req, res) => {
             const userId = (await findUser(user.sub))[0].id;
             const checklists = await getAllUserChecklists(userId);
             if (checklists){
-                res.send({success: true, checklists: checklists, message: "Succesfully retrieved checklists!"}); 
+                res.send({success: true, checklists: checklists, message: "Succesfully retrieved checklists!"});
             }else{
-                res.send({success: false, checklists: null, message: "Hmm. There does not appear to be any checklists for that user, if you believe this an error please contact a dev!"}); 
+                res.send({success: false, checklists: null, message: "Hmm. There does not appear to be any checklists for that user, if you believe this an error please contact a dev!"});
             }
         }else{
-            res.send({success: false, checklists: null, message: "We could not verify your user token!"}); 
+            res.send({success: false, checklists: null, message: "We could not verify your user token!"});
         }
     }else{
         res.send({success: false, checklists: null, message: "You did not send over your user token!"});
@@ -159,9 +168,9 @@ app.post('/trainer/user/checklists', async (req, res) => {
     if (req.body['id']) {
         const checklists = await getAllUserChecklists(req.body['id']);
         if (checklists){
-            res.send({success: true, checklists: checklists, message: "Succesfully retrieved checklists!"}); 
+            res.send({success: true, checklists: checklists, message: "Succesfully retrieved checklists!"});
         }else{
-            res.send({success: false, checklists: null, message: "Hmm. There does not appear to be any checklists for that user, if you believe this an error please contact a dev!"}); 
+            res.send({success: false, checklists: null, message: "Hmm. There does not appear to be any checklists for that user, if you believe this an error please contact a dev!"});
         }
     } else {
         res.send({success: false, checklists: null, message: "ID not specified!"});
@@ -180,7 +189,7 @@ app.post('/trainer/checklist/signItem', async (req, res) => {
                 res.send({success: false, item: null, message: "Something went wrong editing this item!"});
             }
         } else {
-            res.send({success: false, item: null, message: "We could not verify your user token!"}); 
+            res.send({success: false, item: null, message: "We could not verify your user token!"});
         }
     } else {
         res.send({success: false, item: null, message: "Invalid Post Request please check your parameters!"});
@@ -191,9 +200,9 @@ app.post('/trainer/user/checklist', async (req, res) => {
     if (req.body['id'] && req.body['role']) {
         const checklist = await getUserChecklist(req.body['id'], req.body['role']);
         if (checklist) {
-            res.send({success: true, checklist: checklist, message: "Succesfully retrieved checklist!"}); 
+            res.send({success: true, checklist: checklist, message: "Succesfully retrieved checklist!"});
         } else {
-            res.send({success: false, checklist: null, message: "Hmm. There does not appear to be a checklist for that user + role, if you believe this an error please contact a dev!"}); 
+            res.send({success: false, checklist: null, message: "Hmm. There does not appear to be a checklist for that user + role, if you believe this an error please contact a dev!"});
         }
     } else {
         res.send({success: false, checklist: null, message: "ID and/or Role not specified!"});
@@ -215,4 +224,4 @@ app.get('/role/abbreviation', async (req, res) => {
 
 app.get('/', (req, res) => res.send('Hello World123!'))
 
-app.listen(port, '0.0.0.0', () => console.log(`Training app listening on port ${port}!`))
+app.listen(PORT, '0.0.0.0', () => console.log(`Training app listening on port ${PORT}!`))
