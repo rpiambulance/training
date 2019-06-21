@@ -1,12 +1,12 @@
 //local packages
-const { pool } = require("./database.js");
-const { verifyToken, findUser } = require("./UserFunctions.js");
+const { pool } = require("../database.js");
+const { verifyToken, findUser } = require("../UserFunctions.js");
 const {
   getChecklistTemplates,
   updateChecklists,
   getUserChecklist,
   getAllUserChecklists
-} = require("./ChecklistFunctions.js");
+} = require("../ChecklistFunctions.js");
 
 module.exports = app => {
   app.post("/checklist/create", async (req, res) => {

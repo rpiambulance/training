@@ -1,10 +1,10 @@
 //local packages
-const { verifyToken, findUser } = require("./UserFunctions.js");
+const { verifyToken, findUser } = require("../UserFunctions.js");
 const {
   getUserChecklist,
   getAllUserChecklists
-} = require("./ChecklistFunctions.js");
-const { signItem } = require("./TrainerFunctions");
+} = require("../ChecklistFunctions.js");
+const { signItem } = require("../TrainerFunctions.js");
 
 module.exports = app => {
   app.post("/trainer/user/checklists", async (req, res) => {

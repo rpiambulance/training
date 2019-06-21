@@ -1,5 +1,5 @@
 //local packages
-const { roleNameToAbbr } = require("./HelperFunctions.js");
+const { roleNameToAbbr } = require("../HelperFunctions.js");
 
 module.exports = app => {
   app.get("/role/abbreviation", async (req, res) => {

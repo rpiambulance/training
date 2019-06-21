@@ -4,7 +4,7 @@ const {
   getUserInfo,
   getAllUsers,
   getUserFullName
-} = require("./UserFunctions.js");
+} = require("../UserFunctions.js");
 
 module.exports = app => {
   app.post("/user/verify", async (req, res) => {
