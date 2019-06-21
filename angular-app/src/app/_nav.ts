@@ -31,8 +31,6 @@ export interface NavData {
 
 export const navItems: NavData[] = [
   {
-    name: "Welcome, USER",
-    title: true
   },
   {
     name: 'Dashboard',

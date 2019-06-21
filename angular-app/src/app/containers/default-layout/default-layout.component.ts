@@ -11,7 +11,7 @@ import { UserService } from '../../services/user.service';
   templateUrl: './default-layout.component.html'
 })
 export class DefaultLayoutComponent implements OnDestroy {
-  public navItems = navItems;
+  public navItems = [];
   public sidebarMinimized = true;
   private changes: MutationObserver;
   public element: HTMLElement;
@@ -44,8 +44,11 @@ export class DefaultLayoutComponent implements OnDestroy {
   modifyNavBar() : void {
     this.userService.getUserIdToken().subscribe((token) => {
       this.userService.getUserInfo(token).subscribe((resp) => {
-        console.log(resp);
-        this.navItems[0].name = `Weclome, ${resp.user.name.givenName}`;
+        this.navItems = navItems;
+        this.navItems[0] = {
+          name: `Weclome, ${resp.user.name.givenName}`,
+          title: true
+        };
       });
     });
   }
