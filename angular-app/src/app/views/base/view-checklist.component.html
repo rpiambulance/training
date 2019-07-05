@@ -1,4 +1,4 @@
-<div class="container" *ngIf="checklist; else no_checklist">
+<!-- <div class="container" *ngIf="checklist; else no_checklist">
   <h1 class="text-center">{{checklist.role}}</h1>
   <div class="section" *ngFor="let section of checklist.sections">
     <h3>{{section.name}}</h3>
@@ -29,4 +29,52 @@
   <div class="alert alert-danger">
     Hmm something happened when retrieving this checklist. There might not be one made for this credential yet!
   </div>
-</ng-template>
+</ng-template> --> -->
+
+
+<div class="row">
+  <div class="col-sm-12 col-md-12 col-lg-12">
+    <h3>{{checklist.role}}</h3>
+  </div>
+</div>
+<div class="row" *ngFor="let section of checklist.sections">
+  <div class="col-sm-12 col-md-12 col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        {{section.name}}
+        <span class="badge badge-success float-right">Success</span>
+      </div>
+      <div class="card-body">
+        <div class="col-lg-12">
+          <div class="card-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">Status</th>
+                  <th scope="col">Item</th>
+                  <th scope="col">Signed off By</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Comment</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of section.items">
+                  <!-- <td>{{item.status}}</td> -->
+                  <td [ngSwitch]="item.status">
+                    <div *ngSwitchCase="item.status != 0"><span class="badge badge-danger">Incomplete</span></div>
+                    <div *ngSwitchCase="item.status != 1"><span class="badge badge-warning">In Progress</span></div>
+                    <div *ngSwitchCase="item.status != 2"><span class="badge badge-success">Complete</span></div>
+                  </td>
+                  <td>{{item.text}}</td>
+                  <td>{{item.trainer == null ? '-' : item.trainer}}</td>
+                  <td>{{item.date == null ? '-' : item.date}}</td>
+                  <td>{{item.comments == null ? '-' : item.comments}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

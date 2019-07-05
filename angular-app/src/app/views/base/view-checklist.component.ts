@@ -15,6 +15,7 @@ export class ViewChecklistComponent implements OnInit {
   checklist: Checklist = {role: '', sections: []};
   constructor(private route: ActivatedRoute, private checklistService: ChecklistService, private userService: UserService) {
     this.role = this.route.snapshot.paramMap.get('role');
+
     this.userService.getUserIdToken().subscribe((id) => {
       this.checklistService.getUserChecklist(id, this.role).subscribe((retrievedChecklist) => {
         this.checklist = retrievedChecklist.checklist;
@@ -27,9 +28,18 @@ export class ViewChecklistComponent implements OnInit {
         }
       });
     });
+
+    // this.checklistService.getUserChecklist(localStorage.getItem('id_token'), this.role).subscribe((retrievedChecklist) => {
+    //   console.log(retrievedChecklist)
+    //   this.checklist = retrievedChecklist.checklist;
+    //   console.log(this.checklist);
+    // });
+
    }
 
+
   ngOnInit() {
+
   }
 
 }
