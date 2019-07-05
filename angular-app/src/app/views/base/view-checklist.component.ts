@@ -55,4 +55,9 @@ export class ViewChecklistComponent implements OnInit {
     }
   }
 
+  private formatDate(dt){
+    let date = new Date(dt);
+    return ((date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear());
+  }
+
 }
