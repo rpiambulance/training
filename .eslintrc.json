@@ -1,0 +1,33 @@
+{
+  "env": {
+    "node": true,
+    "commonjs": true,
+    "es6": true,
+    "jest": true
+  },
+  "extends": "eslint:recommended",
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "plugins": ["unicorn"],
+  "rules": {
+    "unicorn/filename-case": [
+      "warn",
+      {
+        "cases": {
+          "camelCase": true
+        }
+      }
+    ],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "double"],
+    "semi": ["error", "always"],
+    "no-console": "off",
+    "no-var": 1,
+    "no-case-declarations": 0
+  }
+}

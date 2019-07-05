@@ -1,0 +1,43 @@
+<div class="container">
+  <div [hidden]="alert.message === ''" [class]="alert.class" role="alert">
+    {{alert.message}}
+  </div>
+  <div class="col-xs-1 text-center" id="form">
+  <form [formGroup]="createChecklistForm" (ngSubmit)="onSubmit()">
+    <label>
+        <div class="col-xs-1- text-center">
+            <h2>New Checklist:</h2><br>
+        </div>
+      Checklist Role:<br>
+      <select formControlName="role">
+        <option *ngFor="let r of roles" [value]="r.val">{{r.name}}</option>
+      </select>
+    </label>
+    <br/>
+    <div formArrayName="sections" *ngFor="let section of createChecklistForm.get('sections').controls; let i = index;">
+      <div class="form-row">
+        <div class="input-group">
+            <input class="form-control form-control-lg rounded" [formControl]="section.controls.title" type="text" placeholder="Section Title" required/>
+            <span class="input-group-btn">
+                <button *ngIf="createChecklistForm.get('sections').controls[1]!=undefined" type="button" class="btn btn-danger btn-lg" (click)="removeSection(i)">Remove Section</button>
+            </span>
+          </div>
+        <div *ngFor="let item of section.get('items').controls; let j = index;" class="subForm">
+            <div class="input-group">
+                <input class="form-control form-control rounded" [formControl]="item" type="text" placeholder="Item Name" required/>
+                <span class="input-group-btn">
+                    <button *ngIf="section.get('items').controls[1]!=undefined" type="button" class="btn btn-danger" (click)="removeItem(i,j)">X</button>
+                </span>
+            </div>
+        </div>
+      </div>
+        <div class="btnNew">
+            <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Adds another item field for the section" (click)="addItem(i)">Add Item</button>
+        </div>
+    </div>
+    <br>
+    <button type="button" class="btn btn-info" data-toggle="tooltip" data-placement="bottom" title="Add a section to the checklist" (click)="addSection()">Add Section</button>
+    <button class="btn btn-success" type="submit" [disabled]="!createChecklistForm.valid">Submit</button>
+  </form>
+  </div>
+</div>

@@ -1,14 +1,46 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider } from 'angularx-social-login';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { LandingPageComponent } from './landing-page/landing-page.component';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { CreatechecklistComponent } from './createchecklist/createchecklist.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import { SocialLoginModule, AuthServiceConfig, GoogleLoginProvider } from 'angularx-social-login';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true
+};
+
+import { AppComponent } from './app.component';
+
+// Import containers
+import { DefaultLayoutComponent } from './containers';
+
+import { P404Component } from './views/error/404.component';
+import { P500Component } from './views/error/500.component';
+import { LoginComponent } from './views/login/login.component';
+
+const APP_CONTAINERS = [
+  DefaultLayoutComponent
+];
+
+import {
+  AppAsideModule,
+  AppBreadcrumbModule,
+  AppHeaderModule,
+  AppFooterModule,
+  AppSidebarModule,
+} from '@coreui/angular';
+
+// Import routing module
+import { AppRoutingModule } from './app.routing';
+
+// Import 3rd party components
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 const config = new AuthServiceConfig([
   {
@@ -22,23 +54,38 @@ export function provideConfig() {
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LandingPageComponent,
-    CreatechecklistComponent,
-    DashboardComponent
-  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    SocialLoginModule,
+    AppAsideModule,
+    AppBreadcrumbModule.forRoot(),
+    AppFooterModule,
+    AppHeaderModule,
+    AppSidebarModule,
+    PerfectScrollbarModule,
+    BsDropdownModule.forRoot(),
+    TabsModule.forRoot(),
+    ChartsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    SocialLoginModule,
+    ReactiveFormsModule,
+    FormsModule
+  ],
+  declarations: [
+    AppComponent,
+    ...APP_CONTAINERS,
+    P404Component,
+    P500Component,
+    LoginComponent
   ],
   providers: [{
+    provide: LocationStrategy,
+    useClass: HashLocationStrategy
+  },{
     provide: AuthServiceConfig,
     useFactory: provideConfig
-  }],
-  bootstrap: [AppComponent]
+  },
+],
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }

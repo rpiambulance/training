@@ -5,24 +5,31 @@ const getChecklistTemplates = async () => {
     let conn;
     try {
         conn = await pool.getConnection();
-        let items = await conn.query("SELECT checklistItems.id, text, active, credentials.name from checklistItems\
+        const items = await conn.query("SELECT checklistItems.id, text, active, credentials.name as credential, sections.name as section from checklistItems\
         LEFT JOIN credentials ON credentials.id = checklistItems.credentialId\
-        WHERE active = 1 ORDER BY credentials.name;");
+        LEFT JOIN sections ON sectionId = sections.id WHERE active = 1\
+        ORDER BY credentials.name, sections.name;");
         // Get rid of metadata as we just don't care
         delete items.meta;
-        let checklist = {role: items[0].name, items: []};
-        let currentRole = items[0].name;
-        for (const item of items) {
-            // New checklist since they're grouped :)
-            if (item.name !== currentRole){
+        let checklist = {role: items[0].credential, sections: []};
+        let section = {name: items[0].section, items: []};
+        for (const item of items){
+            // We make a new checklist object if the roles differ
+            if (item.credential != checklist.role){
+                checklist.sections.push(section);
                 checklists.push(checklist);
-                checklist = {role: item.name, items: []};
-                currentRole = item.name;
+                checklist = {role: item.credential, sections: []};
+                section = {name: item.section, items: []};
             }
-            // We used the name now we don't need anymore
-            delete item.name;
-            checklist.items.push(item);
+            // If the section is different we create a new one
+            if (item.section != section.name){
+                checklist.sections.push(section);
+                section = {name: item.section, items: []};
+            }
+            section.items.push(item);
         }
+        // Push the stuff at the end
+        checklist.sections.push(section);
         checklists.push(checklist);
         return checklists;
     } catch (err) {
@@ -35,9 +42,112 @@ const getChecklistTemplates = async () => {
     }
 };
 
-const updateChecklist = async (id) => {
-
+const createUserChecklists = async (userId) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const items = await conn.query("SELECT id FROM checklistItems WHERE active = 1;");
+        delete items.meta;
+        for (const item of items){
+            conn.query("INSERT INTO usersChecklistItems(userId, checklistItemId, status) VALUES (?, ?, ?)", [userId, item.id, 0]);
+        }
+    } catch (err) {
+        console.error(err);
+        return null;
+    } finally {
+        if (conn) {
+            conn.end();
+        }
+    }
 };
 
+const updateChecklists = async (credId, itemIds) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const users = await conn.query("SELECT id FROM users WHERE id NOT IN (SELECT userId FROM usersCredentials WHERE credentialId = ?)", credId);
+        delete users.meta;
+        for (user of users){
+            for(itemId of itemIds){
+                conn.query("INSERT INTO usersChecklistItems(userId, checklistItemId, status) VALUES (?, ?, ?)", [user.id, itemId, 0]);
+            }
+        }
+    } catch (err) {
+        console.error(err);
+        return null;
+    } finally {
+        if (conn) {
+            conn.end();
+        }
+    }
+}
 
-module.exports = { getChecklistTemplates };
+const getUserChecklist = async (userId, roleAbbr) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const query = "SELECT checklistItemId as itemId, checklistItems.text, sections.name as section, credentials.name as credential,\
+        usersChecklistItems.comments, usersChecklistItems.status, usersChecklistItems.trainer,\
+        usersChecklistItems.date FROM usersChecklistItems\
+        LEFT JOIN checklistItems ON usersChecklistItems.checklistItemId = checklistItems.id\
+        LEFT JOIN sections ON sections.id = checklistItems.sectionID\
+        LEFT JOIN credentials on checklistItems.credentialId = credentials.id\
+        WHERE usersChecklistItems.userId = ? AND credentials.abbr = ? ORDER BY credential, section;"
+        const checklistItems = await conn.query(query, [userId, roleAbbr]);
+        delete checklistItems.meta;
+        // If there are no checklist items
+        if (checklistItems.length == 0){
+            return null;
+        }
+        const checklist = {role: checklistItems[0].credential, sections: []};
+        let section = {name: checklistItems[0].section, items: []};
+        for (const item of checklistItems){
+            // If the section is different we create a new one
+            if (item.section != section.name){
+                checklist.sections.push(section);
+                section = {name: item.section, items: []};
+            }
+            section.items.push(item);
+        }
+        // Push the last section at the end
+        checklist.sections.push(section);
+        return checklist;
+    } catch (err) {
+        console.error(err);
+        return null;
+    } finally {
+        if (conn){
+            conn.end();
+        }
+    }
+}
+
+const getAllUserChecklists = async (userId) => {
+    let conn;
+    try {
+        conn = await pool.getConnection();
+        const query = "SELECT abbr FROM credentials;";
+        const roleAbbreviations = await conn.query(query);
+        // Meta data is pretty useless
+        delete roleAbbreviations.meta;
+        const checklists = [];
+        // For every role we get that user checklist and then place them togehter
+        for (const resp of roleAbbreviations) {
+            const checklist = await getUserChecklist(userId, resp.abbr);
+            // No need for the null checklists to go in
+            if (checklist) checklists.push(checklist);
+        }
+        // This signifies no response
+        if (checklists.length === 0) return null;
+        return checklists;
+    } catch (err) {
+        console.error(err);
+        return null;
+    } finally {
+        if (conn) {
+            conn.end();
+        }
+    }
+}
+
+module.exports = { getChecklistTemplates, createUserChecklists, updateChecklists, getUserChecklist, getAllUserChecklists};

@@ -137,6 +137,15 @@ CREATE TABLE IF NOT EXISTS `training`.`usersCredentials` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
+-- -----------------------------------------------------
+-- Table `training`.`sections`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `training`.`sections` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`));
+
+
 
 -- -----------------------------------------------------
 -- Table `training`.`checklistItems`
@@ -144,6 +153,7 @@ CREATE TABLE IF NOT EXISTS `training`.`usersCredentials` (
 CREATE TABLE IF NOT EXISTS `training`.`checklistItems` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `credentialId` INT UNSIGNED NOT NULL,
+  `sectionId` INT UNSIGNED NOT NULL,
   `text` VARCHAR(255) NOT NULL,
   `active` TINYINT NOT NULL,
   PRIMARY KEY (`id`),
@@ -151,7 +161,13 @@ CREATE TABLE IF NOT EXISTS `training`.`checklistItems` (
     FOREIGN KEY (`credentialId`)
     REFERENCES `training`.`credentials` (`id`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK_section`
+    FOREIGN KEY (`sectionId`)
+    REFERENCES `training`.`sections` (`id`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
 
 
 -- -----------------------------------------------------
@@ -160,8 +176,10 @@ CREATE TABLE IF NOT EXISTS `training`.`checklistItems` (
 CREATE TABLE IF NOT EXISTS `training`.`usersChecklistItems` (
   `userId` INT UNSIGNED NOT NULL,
   `checklistItemId` INT UNSIGNED NOT NULL,
-  `trainer` INT UNSIGNED NOT NULL,
-  `date` DATETIME NOT NULL,
+  `comments` TEXT NULL,
+  `status` TINYINT NOT NULL,
+  `trainer` INT UNSIGNED NULL,
+  `date` DATETIME NULL,
   PRIMARY KEY (`userId`, `checklistItemId`),
   CONSTRAINT `FK_userChecklistItem`
     FOREIGN KEY (`userId`)
@@ -354,4 +372,3 @@ CREATE TABLE IF NOT EXISTS `training`.`proxyVoters` (
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-

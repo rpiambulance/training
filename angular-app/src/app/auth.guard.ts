@@ -1,24 +1,23 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
-import { AuthService, SocialUser} from 'angularx-social-login';
-import { Observable, of } from 'rxjs';
-import { map, catchError, tap, finalize } from 'rxjs/operators';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanActivate } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { AuthService } from 'angularx-social-login';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
-
+export class AuthGuard implements  CanActivate{
   constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate(
-    next: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      // All requests on guarded routes should still be verified server side of course, this is just an additional layer
-      if (localStorage.getItem('id_token') == null) {
-        this.router.navigate(['/']);
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean | Promise<boolean> {
+    return this.authService.authState.pipe(map((user) => {
+      if (user) {
+        return true;
+      } else {
+        this.router.navigate(['/login']);
         return false;
       }
-      return true;
+    }));
   }
 }
