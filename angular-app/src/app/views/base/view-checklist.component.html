@@ -60,10 +60,10 @@
               <tbody>
                 <tr *ngFor="let item of section.items">
                   <!-- <td>{{item.status}}</td> -->
-                  <td [ngSwitch]="item.status">
-                    <div *ngSwitchCase="item.status != 0"><span class="badge badge-danger">Incomplete</span></div>
-                    <div *ngSwitchCase="item.status != 1"><span class="badge badge-warning">In Progress</span></div>
-                    <div *ngSwitchCase="item.status != 2"><span class="badge badge-success">Complete</span></div>
+                  <td>
+                    <div *ngIf="item.status == 0"><span class="badge badge-danger">Incomplete</span></div>
+                    <div *ngIf="item.status == 1"><span class="badge badge-warning">In Progress</span></div>
+                    <div *ngIf="item.status == 2"><span class="badge badge-success">Complete</span></div>
                   </td>
                   <td>{{item.text}}</td>
                   <td>{{item.trainer == null ? '-' : item.trainer}}</td>
