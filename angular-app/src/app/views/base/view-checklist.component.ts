@@ -39,7 +39,20 @@ export class ViewChecklistComponent implements OnInit {
 
 
   ngOnInit() {
+  }
 
+  private determineSectionStatus(section) {
+    let status_arr = []
+    for (let item of section.items) {
+      status_arr.push(item.status)
+    }
+    if (status_arr.includes(1) || (status_arr.includes(0) && status_arr.includes(2))) {
+      return 1
+    } else if (status_arr.includes(0) && !(status_arr.includes(1) || status_arr.includes(2))) {
+      return 0
+    } else if (status_arr.includes(2) && !(status_arr.includes(1) || status_arr.includes(0))) {
+      return 2
+    }
   }
 
 }
