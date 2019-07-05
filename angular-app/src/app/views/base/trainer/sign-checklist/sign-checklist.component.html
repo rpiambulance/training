@@ -24,7 +24,7 @@
             <td><span [class]="checklistService.itemStatusToBadge(item.status).class">{{checklistService.itemStatusToBadge(item.status).text}}</span></td>
             <td>{{item.text}}</td>
             <td>{{item.trainer == null ? '-' : item.trainer}}</td>
-            <td>{{item.date == null ? '-' : item.date}}</td>
+            <td>{{item.date == null ? '-' : formatDate(item.date)}}</td>
             <td>{{item.comments == null ? '-' : item.comments}}</td>
           </tr>
         </tbody>

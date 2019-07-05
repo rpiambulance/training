@@ -17,11 +17,11 @@ export class SignChecklistComponent implements OnInit {
   checklist: Checklist = new Checklist('',[]);
   bsModalRef: BsModalRef;
 
-  constructor(private route: ActivatedRoute, 
+  constructor(private route: ActivatedRoute,
     private trainerService: TrainerService,
     private modalService: BsModalService,
     private checklistService: ChecklistService,
-    private userService: UserService) { 
+    private userService: UserService) {
     }
 
   ngOnInit() {
@@ -51,4 +51,10 @@ export class SignChecklistComponent implements OnInit {
       this.checklist.sections[this.bsModalRef.content.index[0]].items[this.bsModalRef.content.index[1]] = this.bsModalRef.content.item;
     });
   }
+
+  private formatDate(dt){
+    let date = new Date(dt);
+    return ((date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear());
+  }
+
 }
