@@ -52,7 +52,17 @@ export const navItems: NavData[] = [
       //   icon: 'icon-chart'
       // }
     ]
-  },
+  }, {
+    name: 'FTO Functions',
+    icon: 'fa fa-user-md',
+    children: [
+      {
+        name: 'Trainee Management',
+        url: '/userlist',
+        icon: 'fa fa-graduation-cap'
+      },
+    ]
+  }
   // {
   //   name: 'Promotions',
   //   url: '/dashboard',
