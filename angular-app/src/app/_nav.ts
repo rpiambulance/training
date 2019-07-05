@@ -43,50 +43,45 @@ export const navItems: NavData[] = [
     icon: 'fa fa-th-list',
     children: [
       {
-        name: 'View Checklists',
-        url: '/view-checklist',
-        icon: 'fa fa-check-square-o'
-      },
-      {
         name: 'Edit Checklists',
         url: '/edit-checklist',
         icon: 'fa fa-pencil-square-o'
       },
-      {
-        name: 'Evaluations',
-        icon: 'icon-chart'
-      }
+      // {
+      //   name: 'Evaluations',
+      //   icon: 'icon-chart'
+      // }
     ]
   },
-  {
-    name: 'Promotions',
-    url: '/dashboard',
-    icon: 'fa fa-shield',
-    children: [
-      {
-        name: 'Apply for Promotion',
-        icon: 'fa fa-ambulance'
-      },
-      {
-        name: 'Manage Promotions',
-        icon: 'fa fa-handshake-o'
-      },
-      {
-        name: 'My Promotions',
-        icon: 'fa fa-user-md'
-      }
-    ]
-  },
-  {
-    name: 'Admin',
-    url: '/dashboard',
-    icon: 'fa fa-gears',
-  },
-  {
-    name: 'My Account',
-    url: '/dashboard',
-    icon: 'fa fa-address-card-o',
-  },
+  // {
+  //   name: 'Promotions',
+  //   url: '/dashboard',
+  //   icon: 'fa fa-shield',
+  //   children: [
+  //     {
+  //       name: 'Apply for Promotion',
+  //       icon: 'fa fa-ambulance'
+  //     },
+  //     {
+  //       name: 'Manage Promotions',
+  //       icon: 'fa fa-handshake-o'
+  //     },
+  //     {
+  //       name: 'My Promotions',
+  //       icon: 'fa fa-user-md'
+  //     }
+  //   ]
+  // },
+  // {
+  //   name: 'Admin',
+  //   url: '/dashboard',
+  //   icon: 'fa fa-gears',
+  // },
+  // {
+  //   name: 'My Account',
+  //   url: '/dashboard',
+  //   icon: 'fa fa-address-card-o',
+  // },
 
   // {
   //   title: true,
