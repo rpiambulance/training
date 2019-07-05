@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit {
     this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
     this.authService.authState.subscribe((user) => {
       this.user = user;
+      console.log(this.user);
       // Prevents sending a request that is invalid
       if (user != null && user.hasOwnProperty('idToken') != null) {
         this.userService.verifyUser(user.idToken).subscribe((verifiedUser) => {

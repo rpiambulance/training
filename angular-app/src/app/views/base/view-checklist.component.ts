@@ -15,6 +15,7 @@ export class ViewChecklistComponent implements OnInit {
   constructor(private route: ActivatedRoute, private checklistService: ChecklistService) {
     this.role = this.route.snapshot.paramMap.get('role');
     this.checklistService.getUserChecklist(localStorage.getItem('id_token'), this.role).subscribe((retrievedChecklist) => {
+      console.log(retrievedChecklist)
       this.checklist = retrievedChecklist.checklist;
       console.log(this.checklist);
     });
