@@ -1,3 +1,10 @@
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>FTO Mode:</strong> You are currently in FTO Mode and signing the <i>{{checklist.role}}</i> checklist for: NAME HERE.
+  <button class="close" type="button" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">×</span>
+  </button>
+</div>
+
 <div class="container" *ngIf="checklist; else no_checklist">
     <h1 class="text-center">{{checklist.role}}</h1>
     <div class="section" *ngFor="let section of checklist.sections; let i = index">
@@ -24,10 +31,9 @@
       </table>
     </div>
   </div>
-  
+
   <ng-template #no_checklist>
     <div class="alert alert-danger">
       Hmm something happened when retrieving this checklist. There might not be one made for this credential yet!
     </div>
   </ng-template>
-  
